@@ -1,8 +1,11 @@
 import AuthForm from "../components/AuthForm";
 import AuthLayout from "../components/AuthLayout";
 
-const SignUp = () => (
-  <AuthLayout
+
+const SignUp = () => {
+  return (
+    <>
+      <AuthLayout
     eyebrow="Commencez l'écoute"
     title="Créer un compte"
     subtitle="Rejoignez Soundspace et composez une expérience musicale à votre image."
@@ -19,6 +22,10 @@ const SignUp = () => (
       buttonLabel="Créer mon compte"
     />
   </AuthLayout>
-);
+    </>
+ 
+  )
+ 
+};
 
 export default SignUp;
