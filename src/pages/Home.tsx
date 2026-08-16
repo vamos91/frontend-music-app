@@ -90,7 +90,7 @@ const Home = () => {
             const dataJson = await data.json()
             console.log(dataJson)
         }
-       // getData()
+        getData()
   }, [])
   
   const handleClick = () => {
