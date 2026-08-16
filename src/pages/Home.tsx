@@ -1,6 +1,7 @@
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 import Logo from "../components/Logo";
 import { useEffect } from "react";
+import useUser from "../store/user";
 
 type IconProps = { className?: string };
 
@@ -79,7 +80,10 @@ const playlists = ["Deep Focus", "Morning Energy", "Productive Flow"];
 
 
 const Home = () => {
-    useEffect(() => {
+  const { user } = useUser()
+  const navigate = useNavigate()
+  useEffect(() => {
+      console.log('home', user)
         const getData = async() => {
             const data = await fetch(import.meta.env.VITE_API_URL)
             //const data = await fetch("http://localhost:3000")
@@ -87,7 +91,13 @@ const Home = () => {
             console.log(dataJson)
         }
        // getData()
-    }, [])
+  }, [])
+  
+  const handleClick = () => {
+    if (user.status != 'connected') {
+      navigate('/signin')
+    }
+  }
     
     return (
         <div>
@@ -106,7 +116,15 @@ const Home = () => {
                     />
                 </div>
 
-                <nav className="ml-auto flex items-center gap-2 text-sm font-semibold" aria-label="Authentification">
+            {
+              user.status === 'connected' ? (
+                 <nav className="ml-auto flex items-center gap-2 text-sm font-semibold" aria-label="Authentification">
+                    <Link to="/signin" className="hidden rounded-full px-5 py-2.5 text-zinc-300 transition hover:text-white sm:block">
+                    Déconnexion
+                    </Link>
+                </nav>
+              ): (
+                  <nav className="ml-auto flex items-center gap-2 text-sm font-semibold" aria-label="Authentification">
                     <Link to="/signup" className="hidden rounded-full px-5 py-2.5 text-zinc-300 transition hover:text-white sm:block">
                     S'inscrire
                     </Link>
@@ -114,6 +132,10 @@ const Home = () => {
                     Se connecter
                     </Link>
                 </nav>
+              )
+            }
+               
+            
                 </header>
 
                 <aside className="fixed top-20 bottom-0 left-0 z-20 hidden w-64 flex-col border-r border-white/8 bg-[#0c0e0d] px-4 py-7 lg:flex">
@@ -132,19 +154,23 @@ const Home = () => {
                     <PlusIcon className="size-4" />
                     </button>
                 </div>
-
-                <button className="mt-4 flex items-center gap-3 rounded-xl border border-white/8 bg-white/4 px-4 py-3 text-left text-sm font-semibold transition hover:border-emerald-400/30 hover:bg-white/7">
+           
+                   <button onClick={() => handleClick()} className="mt-4 flex items-center gap-3 rounded-xl border border-white/8 bg-white/4 px-4 py-3 text-left text-sm font-semibold transition hover:border-emerald-400/30 hover:bg-white/7">
                     <span className="grid size-9 place-items-center rounded-lg bg-emerald-400 text-black"><PlusIcon className="size-5" /></span>
                     Créer une playlist
-                </button>
-
-                <div className="mt-5 space-y-1">
-                    {playlists.map((playlist) => (
-                    <button key={playlist} className="w-full rounded-lg px-4 py-2.5 text-left text-sm text-zinc-400 transition hover:bg-white/5 hover:text-white">
-                        {playlist}
-                    </button>
-                    ))}
-                </div>
+                   </button>
+            {
+              user.status === 'connected' && (
+                  <div className="mt-5 space-y-1">
+                      {playlists.map((playlist) => (
+                      <button key={playlist} className="w-full rounded-lg px-4 py-2.5 text-left text-sm text-zinc-400 transition hover:bg-white/5 hover:text-white">
+                          {playlist}
+                      </button>
+                      ))}
+                  </div>
+              )
+            }
+               
 
                 <p className="mt-auto px-4 text-xs leading-5 text-zinc-600">© 2026 Soundspace<br />Musique pour tous.</p>
                 </aside>

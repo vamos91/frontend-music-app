@@ -13,15 +13,15 @@ type Field = {
 
 const AuthForm = ({ fields, buttonLabel, showForgot = false }: { fields: Field[]; buttonLabel: string; showForgot?: boolean }) => {
   const navigate = useNavigate()
-  //const storeUser = useUser((state) => state.increment())
+  const {updateUser} = useUser()
 
-  const getEvent = (event: any) => {
+  const getEvent = (event: React.SubmitEvent<HTMLFormElement>) => {
     event.preventDefault()
     if (!event.target.email.value || !event.target.password.value) return
     
     const register = async () => {
-      // const user = await fetch(`${import.meta.env.VITE_API_URL}/api/auth/register`)
-      const response = await fetch("http://localhost:3000/api/auth/register", {
+      // const response = await fetch(`${import.meta.env.VITE_API_URL}/api/auth/register`)
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/auth/register`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
@@ -34,8 +34,8 @@ const AuthForm = ({ fields, buttonLabel, showForgot = false }: { fields: Field[]
     }
 
     const login = async () => {
-      // const user = await fetch(`${import.meta.env.VITE_API_URL}/api/auth/register`)
-      const response = await fetch("http://localhost:3000/api/auth/login", {
+      // const response = await fetch(`${import.meta.env.VITE_API_URL}/api/auth/login`)
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/auth/login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
@@ -45,8 +45,7 @@ const AuthForm = ({ fields, buttonLabel, showForgot = false }: { fields: Field[]
       })
       if (response.status === 200) {
         const responseJson = await response.json()
-        console.log(responseJson)
-        //storeUser(responseJson)
+        updateUser(responseJson)
         navigate('/')
       }
     }
